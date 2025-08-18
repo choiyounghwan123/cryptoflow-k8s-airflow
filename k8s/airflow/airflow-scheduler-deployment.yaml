@@ -15,6 +15,7 @@ spec:
     spec:
       serviceAccountName: airflow
       containers:
+      # 기존 Airflow Scheduler 컨테이너 (수정됨)
       - name: airflow-scheduler
         image: apache/airflow:2.7.1-python3.11
         command:
@@ -30,4 +31,51 @@ spec:
             secretKeyRef:
               name: airflow-secret
               key: fernet-key
-
+        # 🆕 DAG 볼륨 마운트 추가
+        volumeMounts:
+        - name: dags-volume
+          mountPath: /opt/airflow/dags
+          readOnly: true
+      
+      # 🆕 Git Sync 사이드카 컨테이너 추가
+      - name: git-sync
+        image: registry.k8s.io/git-sync/git-sync:v3.6.9
+        env:
+        - name: GIT_SYNC_REPO
+          value: "git@github.com:choiyounghwan123/cryptoflow-k8s-airflow.git"
+        - name: GIT_SYNC_BRANCH
+          value: "main"
+        - name: GIT_SYNC_ROOT
+          value: "/tmp/git"
+        - name: GIT_SYNC_DEST
+          value: "dags"  # 리포지토리의 dags 폴더만 동기화
+        - name: GIT_SYNC_PERIOD
+          value: "10s"
+        - name: GIT_SYNC_SSH
+          value: "true"
+        - name: GIT_SSH_KEY_FILE
+          value: "/etc/git-secret/gitSshKey"
+        - name: GIT_SYNC_PERMISSIONS
+          value: "0755"
+        - name: GIT_KNOWN_HOSTS
+          value: "false"
+        volumeMounts:
+        - name: dags-volume
+          mountPath: /tmp/git
+        - name: git-ssh-key
+          mountPath: /etc/git-secret
+          readOnly: true
+        securityContext:
+          runAsUser: 0
+          runAsGroup: 0
+      
+      # 🆕 볼륨 정의 추가
+      volumes:
+      # DAG 파일 공유용 임시 볼륨
+      - name: dags-volume
+        emptyDir: {}
+      # SSH 키 Secret 볼륨
+      - name: git-ssh-key
+        secret:
+          secretName: airflow-ssh-secret
+          defaultMode: 0400
