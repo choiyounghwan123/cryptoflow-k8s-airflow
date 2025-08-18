@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgresql-service
+  namespace: airflow
+spec:
+  type: ClusterIP
+  selector:
+    app: postgresql
+  ports:
+    - port: 5432
+      targetPort: 5432
+      protocol: TCP
