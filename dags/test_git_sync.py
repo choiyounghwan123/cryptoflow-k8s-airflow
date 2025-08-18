@@ -9,7 +9,7 @@ def hello():
 dag = DAG(
     dag_id="test_git_sync",
     start_date=datetime(2025, 8, 18),
-    schedule_interval=None,
+    schedule=None,
     catchup=False,
 )
 
