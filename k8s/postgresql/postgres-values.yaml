@@ -1,0 +1,11 @@
+auth:
+  existingSecret: postgresql-secret
+  secretKey:
+    adminPasswordKey: postgres-password
+    userPasswordKey: postgres-password
+    userName: postgres-user
+    dbName: postgres-db
+
+persistence:
+  enabled: true
+  size: 5Gi

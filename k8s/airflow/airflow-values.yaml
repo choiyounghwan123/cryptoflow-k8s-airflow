@@ -1,0 +1,39 @@
+executor: KubernetesExecutor
+
+# PostgreSQL 연결 설정
+data:
+  metadataConnection:
+    user: airflow
+    pass: airflow123
+    protocol: postgresql
+    host: postgresql-service.airflow.svc.cluster.local
+    port: 5432
+    db: airflow
+    sslmode: disable
+
+dags:
+  gitSync:
+    enabled: true
+    repo: "https://github.com/choiyounghwan123/cryptoflow-k8s-airflow.git"
+    branch: main
+    subPath: "dags"
+
+kubernetesExecutor:
+  deleteWorkerPods: false
+
+serviceAccount:
+  create: true
+  name: airflow
+
+rbac:
+  create: true
+
+postgresql:
+  enabled: false
+
+# 기본 설정 사용 - Secret은 자동으로 생성되도록
+createUserJob:
+  useHelmHooks: false
+
+migrateDatabaseJob:
+  useHelmHooks: false
