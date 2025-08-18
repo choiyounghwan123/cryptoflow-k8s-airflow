@@ -27,10 +27,10 @@ spec:
           httpGet:
             path: /health
             port: 8080
-          initialDelaySeconds: 30
-          periodSeconds: 10
-          timeoutSeconds: 5
-          failureThreshold: 20
+          initialDelaySeconds: 60
+          periodSeconds: 15
+          timeoutSeconds: 10
+          failureThreshold: 30
         livenessProbe:
           httpGet:
             path: /health
@@ -43,10 +43,10 @@ spec:
           httpGet:
             path: /health
             port: 8080
-          initialDelaySeconds: 10
-          periodSeconds: 5
-          timeoutSeconds: 5
-          failureThreshold: 3
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 10
+          failureThreshold: 10
         envFrom:
         - configMapRef:
             name: airflow-config
@@ -56,10 +56,24 @@ spec:
             secretKeyRef:
               name: airflow-secret
               key: fernet-key
-        resources:
-          requests:
-            memory: "512Mi"
-            cpu: "500m"
-          limits:
-            memory: "1Gi"
-            cpu: "1000m"
+        # PostgreSQL 연결 정보
+        - name: POSTGRES_USER
+          valueFrom:
+            secretKeyRef:
+              name: airflow-secret
+              key: postgres-user
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: airflow-secret
+              key: postgres-password
+        - name: POSTGRES_DB
+          valueFrom:
+            secretKeyRef:
+              name: airflow-secret
+              key: postgres-db
+        - name: AIRFLOW__DATABASE__SQL_ALCHEMY_CONN
+          value: "postgresql://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@postgresql-service:5432/$(POSTGRES_DB)"
+
+      
+

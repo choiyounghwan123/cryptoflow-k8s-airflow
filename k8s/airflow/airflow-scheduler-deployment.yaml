@@ -31,10 +31,28 @@ spec:
             secretKeyRef:
               name: airflow-secret
               key: fernet-key
+        # PostgreSQL 연결 정보
+        - name: POSTGRES_USER
+          valueFrom:
+            secretKeyRef:
+              name: airflow-secret
+              key: postgres-user
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: airflow-secret
+              key: postgres-password
+        - name: POSTGRES_DB
+          valueFrom:
+            secretKeyRef:
+              name: airflow-secret
+              key: postgres-db
+        - name: AIRFLOW__DATABASE__SQL_ALCHEMY_CONN
+          value: "postgresql://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@postgresql-service:5432/$(POSTGRES_DB)"
         # 🆕 DAG 볼륨 마운트 추가
         volumeMounts:
         - name: dags-volume
-          mountPath: /opt/airflow/dags
+          mountPath: /opt/airflow/git-dags
           readOnly: true
       
       # 🆕 Git Sync 사이드카 컨테이너 추가
@@ -47,8 +65,7 @@ spec:
           value: "main"
         - name: GIT_SYNC_ROOT
           value: "/tmp/git"
-        - name: GIT_SYNC_DEST
-          value: "dags"  # 리포지토리의 dags 폴더만 동기화
+        # GIT_SYNC_DEST 제거 - 전체 리포지토리 동기화
         - name: GIT_SYNC_PERIOD
           value: "10s"
         - name: GIT_SYNC_SSH
