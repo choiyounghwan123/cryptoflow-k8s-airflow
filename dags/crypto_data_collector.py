@@ -52,7 +52,7 @@ with DAG(
     dag_id = 'crypto_minio_pipeline',
     description = '🚀 암호화폐 데이터를 MinIO에 저장하는 파이프라인',
     default_args = default_args,
-    schedule_interval = timedelta(minutes=10),
+    schedule = timedelta(minutes=10),
     catchup = False,
     tags = ['crypto', 'minio','bronze-layer'],
 ) as dag:
