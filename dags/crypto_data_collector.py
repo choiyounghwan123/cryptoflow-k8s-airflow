@@ -8,6 +8,12 @@ from botocore.exceptions import ClientError
 
 API_KEY = "139f371038c23b420a4450bf50e9cc902ef19028a6fd9069b0d7e83fb7ad6408"
 
+MINIO_CONFIG = {
+    'endpoint_url': 'http://minio:9000',
+    'access_key': 'mlflow',
+    'secret_key': 'mlflowpass',
+}
+
 headers = {
     "Authorization": f"Bearer {API_KEY}"
 }
@@ -32,6 +38,18 @@ def save_to_minio(**context):
         crypto_data = context['task_instance'].xcom_pull(task_ids='collect_crypto')
         if not crypto_data:
             raise ValueError("No crypto data found")
+        
+        s3_client = boto3.client('s3', **MINIO_CONFIG)
+        bucket_name = 'crypto-data'
+
+        try:
+            s3_client.head_bucket(Bucket=bucket_name)
+        except ClientError as e:
+            if e.response['Error']['Code'] == '404':
+                s3_client.create_bucket(Bucket=bucket_name)
+            else:
+                raise
+
     except Exception as e:
         print(f"Error saving to MinIO: {e}")
 
