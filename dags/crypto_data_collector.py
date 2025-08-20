@@ -45,11 +45,26 @@ def save_to_minio(**context):
         try:
             s3_client.head_bucket(Bucket=bucket_name)
         except ClientError as e:
-            if e.response['Error']['Code'] == '404':
-                s3_client.create_bucket(Bucket=bucket_name)
-            else:
-                raise
+            s3_client.create_bucket(Bucket=bucket_name)
+            print(f"Bucket {bucket_name} created")
+        
+        timestamp = datetime.now().strftime('%Y%m%d%H%M%S')
+        file_name = f'crypto_data_{timestamp}.json'
 
+        json_data = json.dumps(crypto_data)
+        json_bytes = json_data.encode('utf-8')
+
+        s3_client.put_object(
+            Bucket=bucket_name,
+            Key=file_name,
+            Body=json_bytes,
+            ContentType='application/json'
+        )
+        
+        print(f"File {file_name} uploaded to {bucket_name}")
+        return file_name
+
+        
     except Exception as e:
         print(f"Error saving to MinIO: {e}")
 
