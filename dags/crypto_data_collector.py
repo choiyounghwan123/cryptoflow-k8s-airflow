@@ -27,7 +27,7 @@ def collect_crypto_data():
         print(f"Error: {e}")
         raise
 
-def save_to_minio():
+def save_to_minio(**context):
     try:
         crypto_data = context['task_instance'].xcom_pull(task_ids='collect_crypto')
         if not crypto_data:
@@ -59,13 +59,11 @@ with DAG(
     collect_task = PythonOperator(
         task_id = 'collect_crypto',
         python_callable = collect_crypto_data,
-        provide_context = True,
     )
 
     save_task = PythonOperator(
         task_id = 'save_to_minio',
         python_callable = save_to_minio,
-        provide_context = True,
     )
 
     collect_task >> save_task
