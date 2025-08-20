@@ -9,9 +9,9 @@ from botocore.exceptions import ClientError
 API_KEY = "139f371038c23b420a4450bf50e9cc902ef19028a6fd9069b0d7e83fb7ad6408"
 
 MINIO_CONFIG = {
-    'endpoint_url': 'http://minio:9000',
-    'access_key': 'mlflow',
-    'secret_key': 'mlflowpass',
+    'endpoint_url': 'http://minio-service:9000',
+    'aws_access_key_id': 'mlflow',
+    'aws_secret_access_key': 'mlflowpass',
 }
 
 headers = {
@@ -60,7 +60,7 @@ def save_to_minio(**context):
             Body=json_bytes,
             ContentType='application/json'
         )
-        
+
         print(f"File {file_name} uploaded to {bucket_name}")
         return file_name
 
