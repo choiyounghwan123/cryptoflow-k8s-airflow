@@ -9,7 +9,7 @@ from botocore.exceptions import ClientError
 API_KEY = "139f371038c23b420a4450bf50e9cc902ef19028a6fd9069b0d7e83fb7ad6408"
 
 MINIO_CONFIG = {
-    'endpoint_url': 'http://minio-service:9000',
+    'endpoint_url': 'http://minio-service.default.svc.cluster.local:9000',
     'aws_access_key_id': 'mlflow',
     'aws_secret_access_key': 'mlflowpass',
 }
