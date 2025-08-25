@@ -74,7 +74,6 @@ class MinIOStorageManager:
                     'format': 'parquet',
                     'compression': 'snappy',
                     'record_count': str(len(df)),
-                    'avg_quality_score': str(df['quality_score'].mean()),
                     'valid_records': str(df['is_valid'].sum()),
                     'collection_timestamp': current_time.isoformat()
                 }
@@ -87,7 +86,6 @@ class MinIOStorageManager:
                 'key': object_key,
                 'record_count': len(df),
                 'file_size_bytes': file_size,
-                'avg_quality_score': df['quality_score'].mean(),
                 'valid_records': df['is_valid'].sum()
             }
         except Exception as e:
