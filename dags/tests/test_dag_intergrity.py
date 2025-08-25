@@ -1,5 +1,5 @@
 import os
-# from airflow.models import DagBag
+from airflow.models import DagBag
 
 def test_dag_integrity():
     dag_dir = os.path.join(os.getcwd(),"dags")

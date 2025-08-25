@@ -1,7 +1,7 @@
 import os
 from airflow.models import Variable
 
-class CtyptoConfig:
+class CryptoConfig:
     API_URL = 'https://rest.coincap.io/v3/assets/'
     LIMIT = 10
     TIMEOUT = 30

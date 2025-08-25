@@ -2,9 +2,20 @@ from datetime import datetime, timedelta
 from airflow import DAG
 from airflow.operators.python import PythonOperator
 
-from plugins.crypto_operators.data_collector import CryptoDataCollector
-from plugins.crypto_operators.data_preprocessor import CryptoDataPreprocessor
-from plugins.crypto_operators.storage_manager import MinIOStorageManager
+from dags.plugins.crypto_operators.data_collector import CryptoDataCollector
+from dags.plugins.crypto_operators.data_preprocessor import CryptoDataPreprocessor
+from dags.plugins.crypto_operators.storage_manager import MinIOStorageManager
+
+# Default arguments for the DAG
+default_args = {
+    'owner': 'data-engineer',
+    'depends_on_past': False,
+    'start_date': datetime(2024, 1, 1),
+    'email_on_failure': False,
+    'email_on_retry': False,
+    'retries': 1,
+    'retry_delay': timedelta(minutes=5),
+}
 
 with DAG(
     dag_id='crypto_bronze_pipeline_v2',
@@ -29,8 +40,8 @@ with DAG(
 
     # 3. Parquet 저장
     save_task = PythonOperator(
-        task_id='save_to_bronze',
-        python_callable=MinIOStorageManager.save_to_bronze,
+        task_id='save_to_minio',
+        python_callable=MinIOStorageManager.save_to_minio,
     )
 
     # 순서: 수집 → 전처리 → 저장

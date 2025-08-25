@@ -1,15 +1,11 @@
 import logging
 import time
 import requests
-from utils.config import CryptoConfig, get_api_key
+from dags.utils.config import CryptoConfig, get_api_key
 
 logger = logging.getLogger(__name__)
 
 class CryptoDataCollector:
-    def __init__(self):
-        self.api_key = get_api_key()
-        self.base_url = CryptoConfig.API_URL
-    
     @staticmethod
     def collect_crypto_data(**context):
         try:

@@ -1,7 +1,7 @@
 import logging
 import json
 import pandas as pd
-from utils.config import get_minio_config
+from dags.utils.config import get_minio_config
 
 logger = logging.getLogger(__name__)
 

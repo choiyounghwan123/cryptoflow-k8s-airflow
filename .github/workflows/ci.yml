@@ -1,5 +1,4 @@
-# .github/workflows/ci.yml
-name: Airflow CI (L0: DAG parse)
+name: Airflow CI
 
 on:
   pull_request:
@@ -26,7 +25,7 @@ jobs:
       - name: Upgrade pip & install pytest   # ✅ 추가
         run: |
           python -m pip install --upgrade pip
-          pip install pytest
+          pip install pytest pandas boto3
 
       - name: Install Airflow (with constraints)
         run: |
