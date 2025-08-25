@@ -20,6 +20,8 @@ dags:
 
 kubernetesExecutor:
   deleteWorkerPods: false
+  deleteWorkerPodsOnSuccess: false
+  deleteWorkerPodsOnFailure: false
 
 serviceAccount:
   create: true
@@ -37,3 +39,35 @@ createUserJob:
 
 migrateDatabaseJob:
   useHelmHooks: false
+
+# 로그 설정 - 원격 로그 비활성화하고 로컬 로그 사용
+logs:
+  persistence:
+    enabled: true
+    size: 2Gi
+    storageClassName: ""  # 기본 스토리지 클래스 사용
+
+config:
+  logging:
+    remote_logging: "False"
+    logging_level: "INFO"
+    remote_base_log_folder: ""
+    remote_log_conn_id: ""
+    colored_console_log: "True"
+  core:
+    logging_config_class: ""
+    enable_xcom_pickling: "False"
+  kubernetes_executor:
+    delete_worker_pods: "False"
+    delete_worker_pods_on_success: "False" 
+    delete_worker_pods_on_failure: "False"
+    worker_pods_creation_batch_size: "1"
+    
+# Airflow 환경 변수로 강제 설정
+env:
+  - name: AIRFLOW__LOGGING__REMOTE_LOGGING
+    value: "False"
+  - name: AIRFLOW__CORE__ENABLE_XCOM_PICKLING  
+    value: "False"
+  - name: AIRFLOW__KUBERNETES_EXECUTOR__DELETE_WORKER_PODS
+    value: "False"

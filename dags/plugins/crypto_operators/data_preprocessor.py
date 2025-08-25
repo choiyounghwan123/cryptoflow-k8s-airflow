@@ -30,8 +30,8 @@ class CryptoDataPreprocessor:
             
             # 3. 메타데이터 추가
             current_time = pd.Timestamp.now(tz='UTC')
-            df['collected_at'] = current_time
-            df['collection_date'] = current_time.date()
+            df['collected_at'] = current_time.isoformat()  # ISO format string으로 변환
+            df['collection_date'] = current_time.date().isoformat()  # date를 string으로 변환
             df['collection_hour'] = current_time.hour
 
             return df.to_dict('records')
