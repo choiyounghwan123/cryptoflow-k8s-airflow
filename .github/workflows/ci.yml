@@ -1,4 +1,4 @@
-name: Airflow CI (L0: DAG parse)
+name: CI
 
 on:
   pull_request:
