@@ -1,10 +1,15 @@
+import sys
+import os
 from datetime import datetime, timedelta
 from airflow import DAG
 from airflow.operators.python import PythonOperator
 
-from dags.plugins.crypto_operators.data_collector import CryptoDataCollector
-from dags.plugins.crypto_operators.data_preprocessor import CryptoDataPreprocessor
-from dags.plugins.crypto_operators.storage_manager import MinIOStorageManager
+# Add current directory to Python path for imports
+sys.path.insert(0, os.path.dirname(__file__))
+
+from plugins.crypto_operators.data_collector import CryptoDataCollector
+from plugins.crypto_operators.data_preprocessor import CryptoDataPreprocessor
+from plugins.crypto_operators.storage_manager import MinIOStorageManager
 
 # Default arguments for the DAG
 default_args = {
