@@ -1,7 +1,13 @@
+import sys
+import os
 import logging
 import time
 import requests
-from dags.utils.config import CryptoConfig, get_api_key
+
+# Add dags directory to Python path
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', '..'))
+
+from utils.config import CryptoConfig, get_api_key
 
 logger = logging.getLogger(__name__)
 

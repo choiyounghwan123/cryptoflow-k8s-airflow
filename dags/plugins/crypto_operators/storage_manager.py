@@ -1,7 +1,13 @@
+import sys
+import os
 import logging
 import json
 import pandas as pd
-from dags.utils.config import get_minio_config
+
+# Add dags directory to Python path
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', '..'))
+
+from utils.config import get_minio_config
 
 logger = logging.getLogger(__name__)
 
