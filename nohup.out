@@ -185,3 +185,6 @@ Handling connection for 8080
 Handling connection for 8080
 E0818 07:53:24.738395  487511 portforward.go:424] "Unhandled Error" err="an error occurred forwarding 8080 -> 8080: error forwarding port 8080 to pod 8f3d53a2af7e5631cc7da7a6f2f4ec608c36b4fbc2f8a3617be334630b654c28, uid : failed to execute portforward in network namespace \"/var/run/netns/cni-addbb7dc-14bb-adfc-91b1-031a2bb072ea\": failed to connect to localhost:8080 inside namespace \"8f3d53a2af7e5631cc7da7a6f2f4ec608c36b4fbc2f8a3617be334630b654c28\", IPv4: dial tcp4 127.0.0.1:8080: connect: connection refused IPv6 dial tcp6 [::1]:8080: connect: connection refused "
 error: lost connection to pod
+Error from server (NotFound): services "airflow-api-server" not found
+Error from server (NotFound): services "airflow-api-server" not found
+Error from server (NotFound): services "airflow-api-server" not found

@@ -1,5 +1,9 @@
 executor: KubernetesExecutor
 
+# 웹서버 활성화
+webserver:
+  enabled: true
+
 # PostgreSQL 연결 설정
 data:
   metadataConnection:
@@ -40,34 +44,40 @@ createUserJob:
 migrateDatabaseJob:
   useHelmHooks: false
 
-# 로그 설정 - 원격 로그 비활성화하고 로컬 로그 사용
-logs:
-  persistence:
-    enabled: true
-    size: 2Gi
-    storageClassName: ""  # 기본 스토리지 클래스 사용
-
-config:
-  logging:
-    remote_logging: "False"
-    logging_level: "INFO"
-    remote_base_log_folder: ""
-    remote_log_conn_id: ""
-    colored_console_log: "True"
-  core:
-    logging_config_class: ""
-    enable_xcom_pickling: "False"
-  kubernetes_executor:
-    delete_worker_pods: "False"
-    delete_worker_pods_on_success: "False" 
-    delete_worker_pods_on_failure: "False"
-    worker_pods_creation_batch_size: "1"
-    
-# Airflow 환경 변수로 강제 설정
+# Airflow 환경 변수 설정 (AWS credentials 포함)
 env:
   - name: AIRFLOW__LOGGING__REMOTE_LOGGING
-    value: "False"
-  - name: AIRFLOW__CORE__ENABLE_XCOM_PICKLING  
+    value: "True"
+  - name: AIRFLOW__LOGGING__REMOTE_BASE_LOG_FOLDER
+    value: "s3://airflow-logs/"
+  - name: AIRFLOW__LOGGING__REMOTE_LOG_CONN_ID
+    value: "minio_conn"
+  - name: AIRFLOW__LOGGING__ENCRYPT_S3_LOGS
     value: "False"
   - name: AIRFLOW__KUBERNETES_EXECUTOR__DELETE_WORKER_PODS
+    value: "True"
+  - name: AIRFLOW__KUBERNETES_EXECUTOR__DELETE_WORKER_PODS_ON_SUCCESS
+    value: "True"
+  - name: AIRFLOW__KUBERNETES_EXECUTOR__DELETE_WORKER_PODS_ON_FAILURE
     value: "False"
+  # AWS credentials for MinIO
+  - name: AWS_ACCESS_KEY_ID
+    value: "mlflow"
+  - name: AWS_SECRET_ACCESS_KEY
+    value: "mlflowpass"
+  - name: AWS_DEFAULT_REGION
+    value: "us-east-1"
+  - name: AWS_ENDPOINT_URL_S3
+    value: "http://minio-service.default.svc.cluster.local:9000"
+
+# MinIO connection 설정
+connections:
+  - conn_id: minio_conn
+    conn_type: aws  # Airflow 3.0.2에서는 'aws' 타입 사용[148][159]
+    conn_extra: |
+      {
+        "endpoint_url": "http://minio-service.default.svc.cluster.local:9000",
+        "aws_access_key_id": "mlflow",
+        "aws_secret_access_key": "mlflowpass",
+        "region_name": "us-east-1"
+      }
