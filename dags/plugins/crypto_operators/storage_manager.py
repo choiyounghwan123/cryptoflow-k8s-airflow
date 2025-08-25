@@ -74,7 +74,6 @@ class MinIOStorageManager:
                     'format': 'parquet',
                     'compression': 'snappy',
                     'record_count': str(len(df)),
-                    'valid_records': str(df['is_valid'].sum()),
                     'collection_timestamp': current_time.isoformat()
                 }
             )
@@ -86,7 +85,6 @@ class MinIOStorageManager:
                 'key': object_key,
                 'record_count': len(df),
                 'file_size_bytes': file_size,
-                'valid_records': df['is_valid'].sum()
             }
         except Exception as e:
             logger.error(f"Error saving data to MinIO: {e}")
