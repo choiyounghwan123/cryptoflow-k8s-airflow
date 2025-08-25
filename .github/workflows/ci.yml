@@ -29,7 +29,7 @@ jobs:
 
       - name: Install Airflow (with constraints)
         run: |
-          AFV=2.9.3
+          AFV=3.0.2
           PYV=$(python -c 'import sys; print(f"{sys.version_info.major}.{sys.version_info.minor}")')
           CONS="https://raw.githubusercontent.com/apache/airflow/constraints-${AFV}/constraints-${PYV}.txt"
           pip install "apache-airflow==${AFV}" --constraint "$CONS"

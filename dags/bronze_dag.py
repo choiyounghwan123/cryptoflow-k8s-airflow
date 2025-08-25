@@ -26,7 +26,7 @@ with DAG(
     dag_id='crypto_bronze_pipeline_v2',
     description='🚀 암호화폐 데이터 수집 → 전처리 → Parquet 저장',
     default_args=default_args,
-    schedule_interval=timedelta(minutes=10),
+    schedule=timedelta(minutes=10),
     catchup=False,
     tags=['crypto', 'bronze-layer', 'parquet'],
 ) as dag:
