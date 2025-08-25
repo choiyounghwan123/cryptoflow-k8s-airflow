@@ -15,7 +15,7 @@ class MinIOStorageManager:
     @staticmethod
     def save_to_minio(**context):
         try:
-            processed_data = context['task_instance'].xcom_pull(task_ids='preprocess_crypto')
+            processed_data = context['task_instance'].xcom_pull(task_ids='preprocess_data')
 
             if not processed_data:
                 raise ValueError("No processed data found")
