@@ -1,0 +1,35 @@
+name: Airflow CI (L0: DAG parse)
+
+on:
+  pull_request:
+    paths: ["dags/**", "plugins/**", "tests/**", "requirements.txt", ".github/workflows/ci.yml"]
+  push:
+    branches: ["main"]
+    paths: ["dags/**", "plugins/**", "tests/**"]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    env:
+      AIRFLOW_HOME: ${{ github.workspace }}/.airflow
+      AIRFLOW__CORE__LOAD_EXAMPLES: "false"
+      AIRFLOW__CORE__EXECUTOR: "SequentialExecutor"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      - name: Install Airflow (with constraints)
+        run: |
+          python -m pip install --upgrade pip
+          AFV=2.9.3
+          PYV=$(python -c 'import sys; print(f"{sys.version_info.major}.{sys.version_info.minor}")')
+          CONS="https://raw.githubusercontent.com/apache/airflow/constraints-${AFV}/constraints-${PYV}.txt"
+          pip install "apache-airflow==${AFV}" --constraint "$CONS"
+          if [ -f requirements.txt ]; then pip install -r requirements.txt --constraint "$CONS"; fi
+
+      - name: Run tests (L0)
+        run: |
+          mkdir -p "$AIRFLOW_HOME"/{dags,logs,plugins}
+          python -m pytest -q
