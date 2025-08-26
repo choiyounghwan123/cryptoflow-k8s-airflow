@@ -16,21 +16,12 @@ class CryptoDataCollector:
     @staticmethod
     def collect_crypto_data(**context):
         try:
-            api_key = get_api_key()
             base_url = CryptoConfig.API_URL
-
-            headers = {
-                "Authorization": f"Bearer {api_key}"
-            }
-
-            params = { "limit": CryptoConfig.LIMIT }
 
             logger.info("CoinCap API request started")
 
             response = requests.get(
             base_url,
-            headers=headers,
-            params=params,
             timeout=30
             )
 

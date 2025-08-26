@@ -2,14 +2,10 @@ import os
 from airflow.models import Variable
 
 class CryptoConfig:
-    API_URL = 'https://rest.coincap.io/v3/assets/'
+    API_URL = "https://api.binance.com/api/v3/ticker/price"
     LIMIT = 10
     TIMEOUT = 30
     MAX_RETRIES = 3
-
-
-def get_api_key():
-    return Variable.get("COINCAP_API_KEY")
 
 def get_minio_config():
     return {
