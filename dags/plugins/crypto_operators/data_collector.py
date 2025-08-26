@@ -27,12 +27,15 @@ class CryptoDataCollector:
 
             response.raise_for_status()
 
-            raw_data = response.json()
-            raw_data['_metadate'] = {
+            raw_data_list = response.json()
+            raw_data = {
+            'data': raw_data_list,  # 실제 데이터는 'data' 키에
+            '_metadata': {
                 'collected_at': datetime.now(tz=timezone.utc).isoformat(),
                 'api_endpoint': base_url,
-                'response_status': response.status_code
-                
+                'response_status': response.status_code,
+                'total_symbols': len(raw_data_list)
+            }
             }
             logger.info("Binance API request successful")
             return raw_data
