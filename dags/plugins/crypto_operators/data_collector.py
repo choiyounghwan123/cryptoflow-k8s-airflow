@@ -8,7 +8,7 @@ from datetime import datetime, timezone
 # Add dags directory to Python path
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', '..'))
 
-from utils.config import CryptoConfig, get_api_key
+from utils.config import CryptoConfig
 
 logger = logging.getLogger(__name__)
 
@@ -18,7 +18,7 @@ class CryptoDataCollector:
         try:
             base_url = CryptoConfig.API_URL
 
-            logger.info("CoinCap API request started")
+            logger.info("Binance API request started")
 
             response = requests.get(
             base_url,
@@ -34,7 +34,7 @@ class CryptoDataCollector:
                 'response_status': response.status_code
                 
             }
-            logger.info("CoinCap API request successful")
+            logger.info("Binance API request successful")
             return raw_data
         
         except Exception as e:
