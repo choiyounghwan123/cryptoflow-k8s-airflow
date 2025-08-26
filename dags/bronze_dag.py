@@ -37,11 +37,11 @@ with DAG(
         python_callable=CryptoDataCollector.collect_crypto_data,
     )
 
-    # 2. 데이터 전처리 (추가!)
-    preprocess_task = PythonOperator(
-        task_id='preprocess_data',
-        python_callable=CryptoDataPreprocessor.preprocess_data,
-    )
+    # # 2. 데이터 전처리 (추가!)
+    # preprocess_task = PythonOperator(
+    #     task_id='preprocess_data',
+    #     python_callable=CryptoDataPreprocessor.preprocess_data,
+    # )
 
     # 3. Parquet 저장
     save_task = PythonOperator(
@@ -50,4 +50,4 @@ with DAG(
     )
 
     # 순서: 수집 → 전처리 → 저장
-    collect_task >> preprocess_task >> save_task
+    collect_task >> save_task

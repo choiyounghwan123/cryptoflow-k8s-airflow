@@ -3,6 +3,7 @@ import os
 import logging
 import time
 import requests
+from datetime import datetime, timezone
 
 # Add dags directory to Python path
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', '..'))
@@ -35,10 +36,15 @@ class CryptoDataCollector:
 
             response.raise_for_status()
 
-            data = response.json()
-
+            raw_data = response.json()
+            raw_data['_metadate'] = {
+                'collected_at': datetime.now(tz=timezone.utc).isoformat(),
+                'api_endpoint': base_url,
+                'response_status': response.status_code
+                
+            }
             logger.info("CoinCap API request successful")
-            return data
+            return raw_data
         
         except Exception as e:
             logger.error(f"Error collecting crypto data: {e}")
